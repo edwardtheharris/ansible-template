@@ -4,18 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-loguru = "*"
-gitpython = "*"
 ansible = "*"
 ansible-creator = "*"
 ansible-navigator = "*"
+gitpython = "*"
+loguru = "*"
 paramiko = "*"
 redis = "*"
+sphinx-nefertiti = "*"
 
 [dev-packages]
 sphinx = "*"
 sphinx-autobuild = "*"
 sphinx-design = "*"
-
-[requires]
-python_version = "3.12"
+sphinxcontrib-autoyaml = "*"
+myst-parser = {extras = ["linkify"], version = "*"}
