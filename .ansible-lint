@@ -113,8 +113,8 @@ kinds:
 # only_builtins_allow_collections:
 #   - example_ns.example_collection
 
-# List of additions modules to allow in only-builtins rule.
 # only_builtins_allow_modules:
+# List of additions modules to allow in only-builtins rule.
 #   - example_module
 
 # Allow setting custom prefix for name[prefix] rule
