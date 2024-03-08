@@ -6,4 +6,13 @@ date: 2024-03-08
 title: Ansible Root CA
 ---
 
-This is the beginning.
+## Assumptions
+
+The default configuration assumes a vault password exists at
+{file}`/etc/ansible/vault`. It also assumes the inventory file is in YAML format
+and located at {file}`/etc/ansible/hosts.yaml`
+
+## Fact Caching
+
+The default configuration uses fact caching with Redis running on the controller
+with the default port.

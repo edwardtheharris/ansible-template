@@ -6,8 +6,16 @@ name = "pypi"
 [packages]
 loguru = "*"
 gitpython = "*"
+ansible = "*"
+ansible-creator = "*"
+ansible-navigator = "*"
+paramiko = "*"
+redis = "*"
 
 [dev-packages]
+sphinx = "*"
+sphinx-autobuild = "*"
+sphinx-design = "*"
 
 [requires]
 python_version = "3.12"
