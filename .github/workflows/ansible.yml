@@ -1,0 +1,26 @@
+###
+# ```{rubric} Ansible Lint Jobs
+# ```
+# ---
+# This action lints Ansible code for quality.
+#
+# ```{literalinclude} .github/workflows/ansible-lint.yml
+# :language: yaml
+# :caption: .github/workflows/ansible-lint.yml
+# ```
+name: ansible-lint
+on:
+  pull_request:
+    branches: ["main", "stable", "release/v*"]
+jobs:
+  build:
+    ###
+    # Naming the build is important to use it as a status check
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        ###
+        # or version tag instead of 'main'
+        uses: ansible/ansible-lint@main
