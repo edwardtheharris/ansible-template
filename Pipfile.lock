@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "844d42bc2cf3c868647ea6e5d5bb2c19d6d014e70777a1a0d2bb65738e385843"
+            "sha256": "a41f7ff9c60b0dbb08859faaec4c447adc7a92cc2e833aaac3e6187cb3f817fa"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -1425,6 +1425,15 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==1.1.10"
+        },
+        "sphinxext-opengraph": {
+            "hashes": [
+                "sha256:b3b230cc6a5b5189139df937f0d9c7b23c7c204493b22646273687969dcb760e",
+                "sha256:dd2868a1e7c9497977fbbf44cc0844a42af39ca65fe1bb0272518af225d06fc5"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==0.9.1"
         },
         "sphinxext-rediraffe": {
             "hashes": [
