@@ -11,11 +11,11 @@ gitpython = "*"
 loguru = "*"
 paramiko = "*"
 redis = "*"
-sphinx-nefertiti = "*"
 
 [dev-packages]
+myst-parser = {extras = ["linkify"], version = "*"}
 sphinx = "*"
 sphinx-autobuild = "*"
 sphinx-design = "*"
+sphinx-nefertiti = "*"
 sphinxcontrib-autoyaml = "*"
-myst-parser = {extras = ["linkify"], version = "*"}

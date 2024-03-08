@@ -5,7 +5,7 @@ date: 2024-02-19
 title: GitHub Actions configuration
 ---
 
-## Dependabot
+<!-- ## Dependabot
 
 Stay away from zero days with Dependabot.
 
@@ -36,4 +36,4 @@ I still like to run things through PyLint anyway.
 And ShellCheck never hurt anybody either.
 
 ```{autoyaml} .github/workflows/shell.yml
-```
+``` -->
