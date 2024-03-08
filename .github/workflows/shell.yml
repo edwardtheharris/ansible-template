@@ -37,3 +37,5 @@ jobs:
       - uses: actions/checkout@main
       - name: Run ShellCheck with action
         uses: ludeeus/action-shellcheck@master
+        with:
+          additional_files: .envrc
