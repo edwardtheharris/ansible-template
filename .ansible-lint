@@ -89,8 +89,8 @@ warn_list:
 offline: true
 
 # Define required Ansible's variables to satisfy syntax check
-extra_vars:
-  secret_ca_passphrase: foobar
+# extra_vars:
+#   secret_ca_passphrase: foobar
 # multiline_string_variable: |
 #   line1
 #   line2
