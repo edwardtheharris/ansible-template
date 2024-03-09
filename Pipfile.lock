@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9a3f7ea7de196b2b04a8ca167e2a5a069aa7641749b5f2e01448e7e2339cf4b8"
+            "sha256": "fc40840ec47f286af8f676f1214629be7e06d857ff5b8f6e570b6dccbeaa73a4"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -896,11 +896,11 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:4a1f741df17cd97880320472108236ee76c9fbabf96a768929ee0a4adb8a73c7",
-                "sha256:ad4f5e51251eedcbe4aa8db0844af6654054aafc9c0f6d3f1fa00f7073c17767"
+                "sha256:3d19062777414af9f1d04db82a80c99a0ee2ecd521f5c09a7f1d6132df4aa9db",
+                "sha256:ac9e84db5188efbf2b7fee91b663651d82b9814d392c8d6b1e56a269698d9363"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==69.1.0.20240308"
+            "version": "==69.1.0.20240309"
         },
         "tzdata": {
             "hashes": [
@@ -1466,6 +1466,15 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==1.1.10"
+        },
+        "sphinxemoji": {
+            "hashes": [
+                "sha256:23ecff1f1e765393e49083b45386b7da81ced97c9a18a1dfd191460a97da3b11",
+                "sha256:dae483695f8d1e90a28a6e9bbccc08d256202afcc1d0fbd33b51b3b4352d439e"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==0.3.1"
         },
         "sphinxext-opengraph": {
             "hashes": [

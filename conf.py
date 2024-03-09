@@ -45,6 +45,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
     'sphinxcontrib.autoyaml',
+    'sphinxemoji.sphinxemoji',
 ]
 
 favicons = [
