@@ -5,7 +5,7 @@ date: 2024-02-19
 title: GitHub Actions configuration
 ---
 
-<!-- ## Dependabot
+## Dependabot
 
 Stay away from zero days with Dependabot.
 
@@ -24,11 +24,11 @@ The CodeQL workflow provided by GitHub is actually pretty good also.
 ```{autoyaml} .github/workflows/codeql.yml
 ```
 
-### pylint
+### pages
 
-I still like to run things through PyLint anyway.
+Build and deploy the GitHub Pages docs.
 
-```{autoyaml} .github/workflows/pylint.yml
+```{autoyaml} .github/workflows/pages.yml
 ```
 
 ### shell
@@ -36,4 +36,4 @@ I still like to run things through PyLint anyway.
 And ShellCheck never hurt anybody either.
 
 ```{autoyaml} .github/workflows/shell.yml
-``` -->
+```

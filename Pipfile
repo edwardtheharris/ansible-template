@@ -9,22 +9,32 @@ ansible-creator = "*"
 ansible-navigator = "*"
 gitpython = "*"
 loguru = "*"
-paramiko = "*"
 redis = "*"
-molecule = "*"
 
 [dev-packages]
+molecule = "*"
+pytest = "*"
+pytest-cov = "*"
+
+[docs]
 myst-parser = {extras = ["linkify"], version = "*"}
 sphinx = "*"
 sphinx-autobuild = "*"
 sphinx-copybutton = "*"
 sphinx-design = "*"
+sphinx-favicon = "*"
 sphinx-nefertiti = "*"
 sphinx-pyscript = "*"
 sphinx-tippy = "*"
 sphinx-togglebutton = "*"
 sphinxcontrib-autoyaml = "*"
+sphinxemoji = "*"
 sphinxext-opengraph = "*"
 sphinxext-rediraffe = "*"
-sphinx-favicon = "*"
-sphinxemoji = "*"
+
+[lint]
+ansible-lint = "*"
+
+[git]
+loguru = "*"
+gitpython = "*"

@@ -21,6 +21,7 @@ autoyaml_root = "."
 autoyaml_doc_delimiter = "###"
 autoyaml_comment = "#"
 autoyaml_level = 10
+autoyaml_safe_loader = False
 copyright = '2024, Xander Harris'
 
 # -- General configuration ---------------------------------------------------
