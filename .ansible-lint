@@ -90,11 +90,11 @@ offline: true
 
 # Define required Ansible's variables to satisfy syntax check
 extra_vars:
-  foo: bar
-  multiline_string_variable: |
-    line1
-    line2
-  complex_variable: ":{;\t$()"
+  secret_ca_passphrase: foobar
+# multiline_string_variable: |
+#   line1
+#   line2
+# complex_variable: ":{;\t$()"
 
 # Uncomment to enforce action validation with tasks, usually is not
 # needed as Ansible syntax check also covers it.
