@@ -1,0 +1,30 @@
+- name: Create root CA
+  hosts: ca01.socal.rr.com
+  remote_user: duchess
+  become: true
+  tasks:
+    - name: Create private key with password protection
+      community.crypto.openssl_privatekey:
+        cipher: auto
+        path: /etc/ssl/private/dc01.ca.key
+        passphrase: "{{ secret_ca_passphrase }}"
+    - name: Create certificate signing request (CSR) for CA certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: /etc/ssl/private/dc01.ca.key
+        privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        common_name: ca01.socal.rr.com
+        use_common_name_for_san: false # since we do not specify SANs, don't use CN as a SAN
+        basic_constraints:
+          - 'CA:TRUE'
+        basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+        key_usage_critical: true
+      register: ca_csr
+    - name: Create self-signed CA certificate from CSR
+      community.crypto.x509_certificate:
+        path: /etc/ssl/certs/dc01.ca.crt
+        csr_content: "{{ ca_csr.csr }}"
+        privatekey_path: /etc/ssl/private/dc01.ca.key
+        privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        provider: selfsigned
