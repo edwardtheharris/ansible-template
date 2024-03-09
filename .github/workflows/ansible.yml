@@ -27,8 +27,7 @@ jobs:
       - name: Install requirements
         run: |
           pip3 install ansible
-          pip3 install ansible-galaxy
-          ansible-galaxy install community.crypto.openssl_privatekey
+          ansible-galaxy collection install community.crypto
       - name: Make ansible directory
         run: |
           sudo mkdir -pv /etc/ansible
