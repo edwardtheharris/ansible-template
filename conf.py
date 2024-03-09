@@ -33,11 +33,13 @@ exclude_patterns = [
     '.venv/*',
     '.tmp/*',
     '.pytest_cache/*',
+    '.venv/',
 ]
 
 extensions = [
     'myst_parser',
     'sphinx_design',
+    'sphinx_favicon',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
@@ -45,14 +47,34 @@ extensions = [
     'sphinxcontrib.autoyaml',
 ]
 
+favicons = [
+    {
+        "sizes": "16x16",
+        "href": "img/ansible-16x16.png",
+    },
+    {
+        "sizes": "32x32",
+        "href": "img/ansible-32x32.png",
+    },
+    {
+        "rel": "apple-touch-icon",
+        "sizes": "180x180",
+        "href": "img/ansible-180x180.png",  # use a local file in _static
+    },
+]
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_logo = '_static/img/ansible.png'
-html_favicon = '_static/img/ansible.png'
 html_static_path = ['_static']
 html_theme = 'sphinx_nefertiti'
-myst_dmath_double_inline=True
+html_theme_options = {
+    'logo': 'img/ansible-180x180.png',
+    'repository_url': 'https://github.com/edwardtheharris/ansible-k8s-ca',
+    'repository_name': 'ansible k8s ca',
+    "style": "blue",
+}
+myst_dmath_double_inline = True
 myst_enable_extensions = [
     "amsmath",
     "attrs_block",
@@ -71,12 +93,9 @@ myst_enable_extensions = [
     "tasklist",
 ]
 myst_title_to_header = True
-project = 'Hacker Rank Challenges'
-rst_epilog = """
-.. sectionauthor:: Xander Harris <xandertheharris@gmail.com>
-"""
+project = 'Ansible Certificate Authority'
 release = '0.0.1'
-show_authors=True
+show_authors = True
 source_suffix = {
     '.md': 'markdown'
 }
