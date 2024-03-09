@@ -1,5 +1,5 @@
 - name: Create root CA
-  hosts: dc01.socal.rr.com
+  hosts: ca01.socal.rr.com
   remote_user: duchess
   become: true
   tasks:
