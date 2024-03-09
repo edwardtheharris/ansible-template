@@ -11,6 +11,7 @@ gitpython = "*"
 loguru = "*"
 paramiko = "*"
 redis = "*"
+molecule = "*"
 
 [dev-packages]
 myst-parser = {extras = ["linkify"], version = "*"}

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2341b269ef011fd14d72a87b04bbc030fdda91080f53d47cbb4ce671554668ea"
+            "sha256": "9a3f7ea7de196b2b04a8ca167e2a5a069aa7641749b5f2e01448e7e2339cf4b8"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -239,6 +239,13 @@
             "markers": "python_version >= '3.7'",
             "version": "==8.1.7"
         },
+        "click-help-colors": {
+            "hashes": [
+                "sha256:b33c5803eeaeb084393b1ab5899dc5476c7196b87a18713045afe76f840b42db",
+                "sha256:f4cabe52cf550299b8888f4f2ee4c5f359ac27e33bcfe4d61db47785a5cc936c"
+            ],
+            "version": "==0.9.4"
+        },
         "cryptography": {
             "hashes": [
                 "sha256:0270572b8bd2c833c3981724b8ee9747b3ec96f699a9665470018594301439ee",
@@ -292,6 +299,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.20.1"
+        },
+        "enrich": {
+            "hashes": [
+                "sha256:0a2ab0d2931dff8947012602d1234d2a3ee002d9a355b5d70be6bf5466008893",
+                "sha256:f29b2c8c124b4dbd7c975ab5c3568f6c7a47938ea3b7d2106c8a3bd346545e4f"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==1.2.7"
         },
         "filelock": {
             "hashes": [
@@ -440,6 +455,15 @@
             "markers": "python_version >= '3.7'",
             "version": "==0.1.2"
         },
+        "molecule": {
+            "hashes": [
+                "sha256:47c982a7d05db7846da77fe7159deb946f26cafb2e388fc71812be0089a41776",
+                "sha256:eac7d9bf12d2bf5254e13a46a40357615c32e7003409f305c3940e93b65d7bea"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10'",
+            "version": "==24.2.0"
+        },
         "mypy-extensions": {
             "hashes": [
                 "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d",
@@ -517,6 +541,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==4.2.0"
+        },
+        "pluggy": {
+            "hashes": [
+                "sha256:7db9f7b503d67d1c5b95f59773ebb58a8c1c288129a88665838012cfb07b8981",
+                "sha256:8c85c2876142a764e5b7548e7d9a0e0ddb46f5185161049a79b7e974454223be"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==1.4.0"
         },
         "ptyprocess": {
             "hashes": [

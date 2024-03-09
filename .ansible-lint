@@ -14,6 +14,7 @@ exclude_paths:
   - test/fixtures/formatting-before/
   - test/fixtures/formatting-prettier/
   - .github/
+  - _static/
 # parseable: true
 # quiet: true
 # strict: true
@@ -107,7 +108,7 @@ kinds:
   # - tasks: "**/tasks/*.yml"
   # - vars: "**/vars/*.yml"
   # - meta: "**/meta/main.yml"
-  - yaml: "**/*.yaml-too"
+  - playbook: "site.yaml"
 
 # List of additional collections to allow in only-builtins rule.
 # only_builtins_allow_collections:

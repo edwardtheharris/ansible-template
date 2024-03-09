@@ -17,8 +17,13 @@ license
 cicd
 ```
 
+## References
+
+- [community.crypto.x509_certificate](https://docs.ansible.com/ansible/latest/collections/community/crypto/x509_certificate_module.html)
+- [How to create a small CA](https://docs.ansible.com/ansible/latest/collections/community/crypto/docsite/guide_ownca.html)
+
 ## Indices and tables
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
