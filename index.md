@@ -18,6 +18,8 @@ title: Ansible CA
 :caption: Playbooks
 
 ca/index
+int/index
+sign/index
 ```
 
 ```{index} playbooks; ca

@@ -8,20 +8,12 @@
 """
 # pylint: disable=invalid-name,redefined-builtin
 
-# import os
-# import sys
-
-# sys.path.append(os.path.abspath('python/python-basic-cert/reverse_and_swap'))
-# sys.path.append(os.path.abspath('python/python-basic-cert/implement_multiset'))
-# sys.path.append(os.path.abspath('python/simple_array_sum'))
-# sys.path.append(os.path.abspath('python/compare_the_triplets'))
-
 author = 'Xander Harris'
 autoyaml_root = "."
 autoyaml_doc_delimiter = "###"
 autoyaml_comment = "#"
-autoyaml_level = 10
-autoyaml_safe_loader = False
+autoyaml_level = 4
+
 copyright = '2024, Xander Harris'
 
 # -- General configuration ---------------------------------------------------

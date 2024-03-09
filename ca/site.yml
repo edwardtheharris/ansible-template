@@ -1,9 +1,17 @@
-###
-# ```{rubric} Root CA
-# ```
-# ---
-# This playbook creates a root CA.
+---
+  ###
+  # ```{rubric} Root CA
+  # ```
+  # ---
+  # This playbook creates a root CA.
+  #
+  # ```{literalinclude} ca/site.yml
+  # :language: yaml
+  # :caption: ca/site.yml
+  # ```
 - name: Create root CA
+  ###
+  # root
   hosts: root
   remote_user: duchess
   become: true

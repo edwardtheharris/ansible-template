@@ -18,5 +18,12 @@ ansible-playbook ca/site.yml
 
 ### Root CA Playbook
 
+```{literalinclude} site.yml
+:language: yaml
+:caption: root ca
+```
+
+There should be proper comments below this line.
+
 ```{autoyaml} ca/site.yml
 ```
