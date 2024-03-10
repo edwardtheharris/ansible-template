@@ -25,5 +25,6 @@ ansible-playbook ca/site.yml
 
 There should be proper comments below this line.
 
-```{autoyaml} ca/site.yml
+```{ansible-task}
+- include_tasks: ca/site.yml
 ```

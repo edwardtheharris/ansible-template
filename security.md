@@ -18,11 +18,11 @@ Version|Supported
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Vulnerabilities and other issues should be filed in the
+[GitHub Issues](https://github.com/edwardtheharris/ansible-k8s-ca/issues).
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Try to include as much detail as you can and, if possible, please submit
+a solution along with the problem.
 
 {attribution="Bean"}
 > The enemy's gate is down.

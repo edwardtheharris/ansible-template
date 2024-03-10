@@ -19,7 +19,10 @@ with the default port.
 
 ## Usage
 
-You can find an example inventory file below.
+You can find an example inventory file below, this inventory is intended
+to house a Kubernetes cluster with a pair of control planes that are members
+of a Samba Active Directory Domain that contains a pair of controllers and
+is responsible for authentication, file, and routing services.
 
 ```{code-block} yaml
 :caption: /etc/ansible/hosts.yaml
