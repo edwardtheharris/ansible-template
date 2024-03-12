@@ -41,10 +41,28 @@
         - ca
     - name: Create self-signed CA certificate from CSR
       community.crypto.x509_certificate:
-        path: "{{ paths.ca }}"
         csr_path: "{{ paths.csr }}"
-        privatekey_path: "{{ paths.key }}"
+        path: "{{ paths.ca }}"
         privatekey_passphrase: "{{ passphrase }}"
+        privatekey_path: "{{ paths.key }}"
         provider: selfsigned
+        return_content: true
+        selfsigned_digest: sha256
       tags:
         - ca
+      register: certificate
+- name: Copy root CA to remotes
+  hosts: ca,dc,np,kcp
+  remote_user: duchess
+  become: true
+  tasks:
+    - name: Copy root CA to remotes
+      ansible.builtin.copy:
+        owner: root
+        group: root
+        mode: 'u+rw,g+rw'
+        src: /etc/ssl/certs/dc01.ca.crt
+        dest: /etc/ssl/certs/dc01.ca.crt
+      tags:
+        - ca
+      delegate_to: ca

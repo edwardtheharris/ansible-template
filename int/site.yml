@@ -3,24 +3,17 @@
   hosts: ca
   become: true
   tasks:
-    - name: Debug
-      ansible.builtin.debug:
-        msg: "{{ item[1].value }}"
-      loop: >-
-        {{ q('ansible.builtin.subelements', int, 'paths') }}
-      tags:
-        - debug
     - name: Clean
       ansible.builtin.file:
         state: absent
-        dest: "{{ item[1].value }}"
+        dest: "{{ item[1] }}"
       loop: >-
-        {{ q('ansible.builtin.subelements', int, 'paths') }}
+        {{ q('ansible.builtin.subelements', intermediates, 'paths') }}
       tags:
         - clean
     - name: Create Intermediate CA key
       community.crypto.openssl_privatekey:
-        path: "{{ item.paths.key }}"
+        path: "{{ item.paths.1 }}"
       loop: >-
         {{ intermediates }}
       tags:
@@ -29,39 +22,69 @@
     - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr:
         backup: true
-        create_subject_key_identifier: true
-        email_address: "{{ int.ca.dn.email }}"
-        privatekey_path: "{{ item.paths.1.value }}"
+        basic_constraints:
+          - 'CA:TRUE'
+        # create_subject_key_identifier: true
+        email_address: "{{ dn.email }}"
+        path: "{{ item.paths.2 }}"
+        privatekey_path: "{{ item.paths.1 }}"
         subject_alt_name: "{{ item.subj_alt }}"
-        path: "{{ item.csr_path }}"
       loop: >
-        {{ int }}
+        {{ intermediates }}
       tags:
         - int
         - csr
     - name: Sign certificate with our CA
       community.crypto.x509_certificate:
-        csr_path: "{{ item.csr_path }}"
-        path: "{{ item.path }}"
-        provider: ownca
-        ownca_path: "{{ ca_path }}"
-        ownca_privatekey_path: "{{ ca_key_path }}"
-        ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
-        ###
-        # valid for one year
-        ownca_not_after: >-
-          +36500d
-        ###
-        # valid since yesterday
+        csr_path: "{{ item.paths.2 }}"
+        ownca_not_after: '+36500d'
         ownca_not_before: "-1d"
-      loop: "{{ int }}"
+        ownca_path: "{{ paths.ca }}"
+        ownca_privatekey_passphrase: "{{ passphrase }}"
+        ownca_privatekey_path: "{{ paths.key }}"
+        path: "{{ item.paths.0 }}"
+        provider: ownca
+      loop: "{{ intermediates }}"
       tags:
         - int
         - sign
-    - name: Slurp the int CA
-      ansible.builtin.slurp:
-        src: "{{ int[0].path }}"
-      register: int_ca
-    - name: Debug CA
-      ansible.builtin.debug:
-        msg: "{{ int_ca }}"
+    - name: Complete chain
+      community.crypto.certificate_complete_chain:
+        input_chain: "{{ lookup('ansible.builtin.file', '/etc/ssl/certs/dc01.ca.crt') }}"
+        intermediate_certificates:
+          - /etc/ssl/certs/dc02.int.crt
+        root_certificates:
+          - /etc/ssl/certs/dc01.ca.crt
+      register: chain
+      tags:
+        - int
+        - chain
+    - name: Copy chain cert
+      ansible.builtin.copy:
+        dest: /etc/ssl/certs/ca.chain.crt
+        content: "{{ ''.join(chain.complete_chain) }}"
+        owner: root
+        group: root
+        mode: 'u+rw,g+rw'
+      tags:
+        - int
+        - chain
+- name: Copy Intermediate CA to remotes
+  hosts: ca,dc,np,kcp
+  remote_user: duchess
+  become: true
+  tasks:
+    - name: Copy Intermediate CAs to remotes
+      ansible.builtin.copy:
+        owner: root
+        group: root
+        mode: 'u+rw,g+rw'
+        src: "{{ item }}"
+        dest: "{{ item }}"
+      loop:
+        - /etc/ssl/certs/dc01.int.crt
+        - /etc/ssl/certs/dc02.int.crt
+        - /etc/ssl/certs/ca.chain.crt
+      delegate_to: ca
+      tags:
+        - int
