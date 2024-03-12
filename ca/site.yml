@@ -16,6 +16,8 @@
         cipher: auto
         path: "{{ ca.key_path }}"
         passphrase: "{{ ca.passphrase }}"
+      tags:
+        - ca
     - name: Create certificate signing request (CSR) for CA certificate
       community.crypto.openssl_csr:
         authority_cert_issuer: "{{ ca.authority }}"
@@ -35,6 +37,8 @@
         organization_name: "{{ ca.org }}"
         organizational_unit_name: "{{ ca.unit }}"
         state_or_province_name: "{{ ca.state }}"
+      tags:
+        - ca
     - name: Create self-signed CA certificate from CSR
       community.crypto.x509_certificate:
         path: "{{ ca.path }}"
@@ -42,3 +46,5 @@
         privatekey_path: "{{ ca.key_path }}"
         privatekey_passphrase: "{{ ca.passphrase }}"
         provider: selfsigned
+      tags:
+        - ca
