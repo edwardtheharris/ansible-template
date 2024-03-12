@@ -20,8 +20,9 @@
         - clean
     - name: Create Intermediate CA key
       community.crypto.openssl_privatekey:
-        path: "{{ item.value.paths.key }}"
-      loop: "{{ int|dict2items }}"
+        path: "{{ item.paths.key }}"
+      loop: >-
+        {{ intermediates }}
       tags:
         - int
         - key

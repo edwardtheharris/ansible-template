@@ -8,43 +8,43 @@
       ansible.builtin.file:
         state: absent
         dest: "{{ item }}"
-      loop: "{{ ca.paths }}"
+      loop: "{{ paths }}"
       tags:
         - clean
     - name: Create private key with password protection
       community.crypto.openssl_privatekey:
         cipher: auto
-        path: "{{ ca.paths.key }}"
-        passphrase: "{{ ca.passphrase }}"
+        path: "{{ paths.key }}"
+        passphrase: "{{ passphrase }}"
       tags:
         - ca
     - name: Create certificate signing request (CSR) for CA certificate
       community.crypto.openssl_csr:
-        authority_cert_issuer: "{{ ca.authority }}"
+        authority_cert_issuer: "{{ authority }}"
         authority_cert_serial_number: "1001"
         basic_constraints:
           - 'CA:TRUE'
         basic_constraints_critical: true
-        common_name: "{{ ca.common_name }}"
-        email_address: "root@{{ ca.common_name }}"
+        common_name: "{{ common_name }}"
+        email_address: "root@{{ common_name }}"
         key_usage:
           - keyCertSign
         key_usage_critical: true
-        locality_name: "{{ ca.locality }}"
-        organization_name: "{{ ca.org }}"
-        organizational_unit_name: "{{ ca.unit }}"
-        path: "{{ ca.paths.csr }}"
-        privatekey_passphrase: "{{ ca.passphrase }}"
-        privatekey_path: "{{ ca.paths.key }}"
-        state_or_province_name: "{{ ca.state }}"
+        locality_name: "{{ locality }}"
+        organization_name: "{{ org }}"
+        organizational_unit_name: "{{ unit }}"
+        path: "{{ paths.csr }}"
+        privatekey_passphrase: "{{ passphrase }}"
+        privatekey_path: "{{ paths.key }}"
+        state_or_province_name: "{{ state }}"
       tags:
         - ca
     - name: Create self-signed CA certificate from CSR
       community.crypto.x509_certificate:
-        path: "{{ ca.paths.ca }}"
-        csr_path: "{{ ca.paths.csr }}"
-        privatekey_path: "{{ ca.paths.key }}"
-        privatekey_passphrase: "{{ ca.passphrase }}"
+        path: "{{ paths.ca }}"
+        csr_path: "{{ paths.csr }}"
+        privatekey_path: "{{ paths.key }}"
+        privatekey_passphrase: "{{ passphrase }}"
         provider: selfsigned
       tags:
         - ca
