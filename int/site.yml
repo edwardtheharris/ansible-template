@@ -1,54 +1,41 @@
 ---
-- name: Generate Intermediate CA
-  ###
-  # Playbook to generate an Intermediate CA
-  hosts: ca.socal.rr.com
+- name: Create Intermediate CAs
+  hosts: root
   become: true
   tasks:
-    # - name: Create directory for intermediate CA
-    #   ansible.builtin.file:
-    #     path: "{{ item }}"
-    #     state: directory
-    #     recurse: true
-    #   loop:
-    #     - "/etc/ssl/int/private"
-    #     - "/etc/ssl/int/certs"
-    #     - "/etc/ssl/int/csr"
-    #     - "/etc/ssl/int/crl"
-    - name: Generate Intermediate CA private key
+    - name: Create Intermediate CA key
       community.crypto.openssl_privatekey:
-        path: "/etc/ssl/private/ca.int.key"
-        type: rsa
-        size: 4096
-      register: genpkey_result
-    - name: Generate Intermediate CA CSR
+        path: "{{ item.key_path }}"
+      loop: "{{ int }}"
+    - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr:
-        path: "/etc/ssl/csr/int.csr"
-        privatekey_path: "/etc/ssl/private/ca.int.key"
-        common_name: "ca.socal.rr.com"
-      register: req_result
-
-    - name: Sign Intermediate CA CSR with Root CA
-      community.crypto.openssl_certificate:
-        path: "/etc/ssl/certs/ca.int.crt"
-        privatekey_path: "/etc/ssl/private/ca.int.key"
-        csr_path: "/etc/ssl/csr/ca.int.csr"
-        authority_certificate_path: "/etc/ssl/certs/ca.crt"
-        authority_key_path: "/etc/ssl/private/ca.key"
-        state: present
-        mode: 0644
-      register: x509_result
-
-    - name: Create Intermediate CA Chain
-      ansible.builtin.shell:
-        cmd: "cat /etc/ssl/certs/ca.int.crt /etc/ssl/certs/ca.crt > /etc/ssl/certs/ca.bundle.crt"
-      register: cat_result
-
-    - name: Display results
+        backup: true
+        create_subject_key_identifier: true
+        email_address: "{{ item.email }}"
+        privatekey_path: "{{ item.key_path }}"
+        subject_alt_name: "{{ item.subj_alt }}"
+        path: "{{ item.csr_path }}"
+      loop: "{{ int }}"
+    - name: Sign certificate with our CA
+      community.crypto.x509_certificate:
+        csr_path: "{{ item.csr_path }}"
+        path: "{{ item.path }}"
+        provider: ownca
+        ownca_path: "{{ ca_path }}"
+        ownca_privatekey_path: "{{ ca_key_path }}"
+        ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        ###
+        # valid for one year
+        ownca_not_after: >-
+          +36500d
+        ###
+        # valid since yesterday
+        ownca_not_before: "-1d"
+      loop: "{{ int }}"
+    - name: Slup the int CA
+      ansible.builtin.slurp:
+        src: "{{ int[0].path }}"
+      register: int_ca
+    - name: Debug CA
       ansible.builtin.debug:
-        var: item.stdout
-      loop:
-        - "{{ genpkey_result }}"
-        - "{{ req_result }}"
-        - "{{ x509_result }}"
-        - "{{ cat_result }}"
+        msg: "{{ int_ca }}"

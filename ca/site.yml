@@ -1,6 +1,6 @@
 ---
 - name: Create root CA
-  hosts: root
+  hosts: ca
   remote_user: duchess
   become: true
   tasks:

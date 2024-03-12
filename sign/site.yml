@@ -1,59 +1,96 @@
 ---
-###
-# Sign a cert with our CA
-- name: Sign a certificate with our CA
-  ###
-  # List of tasks
+- name: Sign a certificate with our CA or service on the same server.
+  hosts: root
+  become: true
   tasks:
-    - name: Create private key for new certificate on server_1
+    - name: Create private key for new certificate on target server
       community.crypto.openssl_privatekey:
-        path: /path/to/certificate.key
-      delegate_to: server_1
-      run_once: true
-
+        path: /etc/samba/private/int.key
     - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr_pipe:
-        privatekey_path: /path/to/certificate.key
-        subject_alt_name:
-          - "DNS:ansible.com"
-          - "DNS:www.ansible.com"
-          - "DNS:docs.ansible.com"
-      delegate_to: server_1
-      run_once: true
+        privatekey_path: /etc/samba/private/int.key
+        subject_alt_name: "{{ subject_alt_name }}"
       register: csr
-
     - name: Check whether certificate exists
       stat:
-        path: /path/to/certificate.pem
-      delegate_to: server_1
+        path: /etc/samba/pki/int.crt
+      delegate_to: dc01
       run_once: true
       register: certificate_exists
-
     - name: Read existing certificate if exists
       slurp:
-        src: /path/to/certificate.pem
+        src: /etc/samba/pki/int.crt
       when: certificate_exists.stat.exists
-      delegate_to: server_1
+      delegate_to: dc01
       run_once: true
       register: certificate
-
     - name: Sign certificate with our CA
       community.crypto.x509_certificate_pipe:
         content: "{{ (certificate.content | b64decode) if certificate_exists.stat.exists else omit }}"
         csr_content: "{{ csr.csr }}"
         provider: ownca
-        ownca_path: /path/to/ca-certificate.pem
-        ownca_privatekey_path: /path/to/ca-certificate.key
+        ownca_path: /etc/ssl/certs/ca.crt
+        ownca_privatekey_path: /etc/ssl/private/ca.key
         ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
-        ownca_not_after: +365d  # valid for one year
+        ownca_not_after: +36500d  # valid for one year
         ownca_not_before: "-1d"  # valid since yesterday
-      delegate_to: server_2
+      delegate_to: dc01
       run_once: true
       register: certificate
 
     - name: Write certificate file on server_1
       copy:
-        dest: /path/to/certificate.pem
+        dest: /etc/samba/pki/int.crt
+        content: "{{ certificate.certificate }}"
+      delegate_to: server_1
+      run_once: true
+      when: certificate is changed
+- name: Sign a certificate for a service on the intermediate CA.
+  hosts: int
+  become: true
+  tasks:
+    - name: Create private key for new certificate on target server
+      community.crypto.openssl_privatekey:
+        path: /etc/samba/private/int.key
+      delegate_to: dc01
+      run_once: true
+    - name: Create certificate signing request (CSR) for new certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: /etc/samba/private/int.key
+        subject_alt_name: "{{ subject_alt_name }}"
+      delegate_to: dc01
+      run_once: true
+      register: csr
+    - name: Check whether certificate exists
+      stat:
+        path: /etc/samba/pki/int.crt
+      delegate_to: dc01
+      run_once: true
+      register: certificate_exists
+    - name: Read existing certificate if exists
+      slurp:
+        src: /etc/samba/pki/int.crt
+      when: certificate_exists.stat.exists
+      delegate_to: dc01
+      run_once: true
+      register: certificate
+    - name: Sign certificate with our CA
+      community.crypto.x509_certificate_pipe:
+        content: "{{ (certificate.content | b64decode) if certificate_exists.stat.exists else omit }}"
+        csr_content: "{{ csr.csr }}"
+        provider: ownca
+        ownca_path: /etc/ssl/certs/ca.crt
+        ownca_privatekey_path: /etc/ssl/private/ca.key
+        ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        ownca_not_after: +36500d  # valid for one year
+        ownca_not_before: "-1d"  # valid since yesterday
+      delegate_to: dc01
+      run_once: true
+      register: certificate
+
+    - name: Write certificate file on server_1
+      copy:
+        dest: /etc/samba/pki/int.crt
         content: "{{ certificate.certificate }}"
       delegate_to: server_1
       run_once: true

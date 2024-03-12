@@ -1,0 +1,24 @@
+
+- name: Create cert chains
+  hosts: root
+  become: true
+  tags:
+    - chain
+  tasks:
+    - name: Find root certificate
+      community.crypto.certificate_complete_chain:
+        input_chain: "{{ lookup('ansible.builtin.file', '/etc/ssl/csr/dc01.') }}"
+        intermediate_certificates:
+          - /etc/ssl/certs/dc01.int.crt
+        root_certificates:
+          - /etc/ssl/certs/dc01.ca.crt
+      register: chain
+
+    - name: Write complete chain to disk
+      ansible.builtin.copy:
+        dest: /etc/ssl/certs/dc01.chain.crt
+        content: "{{ ''.join(dc01.complete_chain) }}"
+    - name: Write root chain (intermediates and root) to disk
+      ansible.builtin.copy:
+        dest: /etc/ssl/csr/www.ansible.com-rootchain.pem
+        content: "{{ ''.join(www_ansible_com.chain) }}"
