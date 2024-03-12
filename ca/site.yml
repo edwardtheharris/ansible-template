@@ -7,8 +7,8 @@
     - name: Clean
       ansible.builtin.file:
         state: absent
-        dest: "{{ item }}"
-      loop: "{{ paths }}"
+        dest: "{{ item.value }}"
+      loop: "{{ paths | dict2items }}"
       tags:
         - clean
     - name: Create private key with password protection
@@ -25,18 +25,18 @@
         basic_constraints:
           - 'CA:TRUE'
         basic_constraints_critical: true
-        common_name: "{{ common_name }}"
-        email_address: "root@{{ common_name }}"
+        common_name: "{{ dn.cn }}"
+        email_address: "root@{{ dn.cn }}"
         key_usage:
           - keyCertSign
         key_usage_critical: true
-        locality_name: "{{ locality }}"
-        organization_name: "{{ org }}"
-        organizational_unit_name: "{{ unit }}"
+        locality_name: "{{ dn.locality }}"
+        organization_name: "{{ dn.org }}"
+        organizational_unit_name: "{{ dn.unit }}"
         path: "{{ paths.csr }}"
         privatekey_passphrase: "{{ passphrase }}"
         privatekey_path: "{{ paths.key }}"
-        state_or_province_name: "{{ state }}"
+        state_or_province_name: "{{ dn.state }}"
       tags:
         - ca
     - name: Create self-signed CA certificate from CSR
