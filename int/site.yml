@@ -29,8 +29,8 @@
       community.crypto.openssl_csr:
         backup: true
         create_subject_key_identifier: true
-        email_address: "{{ item.email }}"
-        privatekey_path: "{{ item.key_path }}"
+        email_address: "{{ int.ca.dn.email }}"
+        privatekey_path: "{{ item.paths.1.value }}"
         subject_alt_name: "{{ item.subj_alt }}"
         path: "{{ item.csr_path }}"
       loop: >
