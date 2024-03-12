@@ -58,11 +58,12 @@
   tasks:
     - name: Copy root CA to remotes
       ansible.builtin.copy:
-        owner: root
+        dest: /etc/ssl/certs/dc01.ca.crt
         group: root
         mode: 'u+rw,g+rw'
+        owner: root
+        remote_src: true
         src: /etc/ssl/certs/dc01.ca.crt
-        dest: /etc/ssl/certs/dc01.ca.crt
       tags:
         - ca
       delegate_to: ca
