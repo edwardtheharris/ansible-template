@@ -1,12 +1,30 @@
 ---
 - name: Create Intermediate CAs
-  hosts: root
+  hosts: ca
   become: true
   tasks:
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "{{ item[1].value }}"
+      loop: >-
+        {{ q('ansible.builtin.subelements', int, 'paths') }}
+      tags:
+        - debug
+    - name: Clean
+      ansible.builtin.file:
+        state: absent
+        dest: "{{ item[1].value }}"
+      loop: >-
+        {{ q('ansible.builtin.subelements', int, 'paths') }}
+      tags:
+        - clean
     - name: Create Intermediate CA key
       community.crypto.openssl_privatekey:
-        path: "{{ item.key_path }}"
-      loop: "{{ int }}"
+        path: "{{ item.value.paths.key }}"
+      loop: "{{ int|dict2items }}"
+      tags:
+        - int
+        - key
     - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr:
         backup: true
@@ -15,7 +33,11 @@
         privatekey_path: "{{ item.key_path }}"
         subject_alt_name: "{{ item.subj_alt }}"
         path: "{{ item.csr_path }}"
-      loop: "{{ int }}"
+      loop: >
+        {{ int }}
+      tags:
+        - int
+        - csr
     - name: Sign certificate with our CA
       community.crypto.x509_certificate:
         csr_path: "{{ item.csr_path }}"
@@ -32,7 +54,10 @@
         # valid since yesterday
         ownca_not_before: "-1d"
       loop: "{{ int }}"
-    - name: Slup the int CA
+      tags:
+        - int
+        - sign
+    - name: Slurp the int CA
       ansible.builtin.slurp:
         src: "{{ int[0].path }}"
       register: int_ca
