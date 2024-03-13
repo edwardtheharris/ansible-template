@@ -45,6 +45,7 @@
         path: "{{ item.paths.0 }}"
         provider: ownca
       loop: "{{ intermediates }}"
+      delegate_to: ca
       tags:
         - int
         - sign

@@ -52,18 +52,31 @@
         - ca
       register: certificate
 - name: Copy root CA to remotes
-  hosts: ca,dc,np,kcp
+  hosts: bm
   remote_user: duchess
   become: true
   tasks:
     - name: Copy root CA to remotes
       ansible.builtin.copy:
-        dest: /etc/ssl/certs/dc01.ca.crt
+        dest: "{{ ca.paths.ca }}"
         group: root
         mode: 'u+rw,g+rw'
         owner: root
         remote_src: true
-        src: /etc/ssl/certs/dc01.ca.crt
+        src: "{{ ca.paths.ca }}"
       tags:
         - ca
+      delegate_to: ca
+    - name: Clean root CA
+      ansible.builtin.copy:
+        dest: "{{ ca.paths.ca }}"
+        group: root
+        mode: 'u+rw,g+rw'
+        owner: root
+        remote_src: true
+        src: "{{ ca.paths.ca }}"
+      tags:
+        - ca
+      loop: >-
+        {{ ca.paths }}
       delegate_to: ca
