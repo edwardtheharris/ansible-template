@@ -10,7 +10,6 @@ ansible-navigator = "*"
 gitpython = "*"
 loguru = "*"
 redis = "*"
-sphinx-ansible = "*"
 
 [dev-packages]
 molecule = "*"
@@ -20,6 +19,7 @@ pytest-cov = "*"
 [docs]
 myst-parser = {extras = ["linkify"], version = "*"}
 sphinx = "*"
+sphinx-ansible = "*"
 sphinx-autobuild = "*"
 sphinx-copybutton = "*"
 sphinx-design = "*"
