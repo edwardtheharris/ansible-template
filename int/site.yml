@@ -13,7 +13,7 @@
         - clean
     - name: Create Intermediate CA key
       community.crypto.openssl_privatekey:
-        path: "{{ item.paths.1 }}"
+        path: "{{ item.paths.5 }}"
       loop: >-
         {{ intermediates }}
       tags:
@@ -26,8 +26,8 @@
           - 'CA:TRUE'
         # create_subject_key_identifier: true
         email_address: "{{ dn.email }}"
-        path: "{{ item.paths.2 }}"
-        privatekey_path: "{{ item.paths.1 }}"
+        path: "{{ item.paths.4 }}"
+        privatekey_path: "{{ item.paths.5 }}"
         subject_alt_name: "{{ item.subj_alt }}"
       loop: >
         {{ intermediates }}
@@ -36,27 +36,45 @@
         - csr
     - name: Sign certificate with our CA
       community.crypto.x509_certificate:
-        csr_path: "{{ item.paths.2 }}"
+        csr_path: "{{ item.paths.4 }}"
         ownca_not_after: '+36500d'
         ownca_not_before: "-1d"
-        ownca_path: "{{ paths.ca }}"
+        ownca_path: "{{ paths.0 }}"
         ownca_privatekey_passphrase: "{{ passphrase }}"
-        ownca_privatekey_path: "{{ paths.key }}"
-        path: "{{ item.paths.0 }}"
+        ownca_privatekey_path: "{{ paths.3 }}"
+        path: "{{ item.paths.2 }}"
         provider: ownca
       loop: "{{ intermediates }}"
-      delegate_to: ca
       tags:
         - int
         - sign
+    - name: Get dc01.int.crt info
+      community.crypto.x509_certificate:
+        csr_path: /etc/ssl/csr/dc01.int.csr
+        ownca_path: "{{ paths.0 }}"
+        ownca_privatekey_passphrase: "{{ passphrase }}"
+        ownca_privatekey_path: "{{ paths.3 }}"
+        provider: ownca
+        path: /etc/ssl/certs/dc01.int.crt
+        return_content: true
+      register: int
+      tags:
+        - int
+    - name: Dump information
+      ansible.builtin.debug:
+        var: int.certificate
+      tags:
+        - int
     - name: Complete chain
       community.crypto.certificate_complete_chain:
-        input_chain: "{{ lookup('ansible.builtin.file', '/etc/ssl/certs/dc01.ca.crt') }}"
+        input_chain: >-
+          {{ int.certificate }}
         intermediate_certificates:
           - /etc/ssl/certs/dc02.int.crt
         root_certificates:
-          - /etc/ssl/certs/dc01.ca.crt
+          - "{{ paths.0 }}"
       register: chain
+      delegate_to: ca
       tags:
         - int
         - chain
@@ -67,6 +85,7 @@
         owner: root
         group: root
         mode: 'u+rw,g+rw'
+      delegate_to: ca
       tags:
         - int
         - chain
