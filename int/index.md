@@ -17,9 +17,10 @@ ansible-playbook int/site.yml
 ```
 
 ### Intermediate CA Playbook
-
+<!--
 ```{autoyaml} ca/site.yml
 ```
+-->
 
 ```{literalinclude} site.yml
 :language: yaml

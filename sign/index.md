@@ -17,9 +17,10 @@ ansible-playbook sign/site.yml
 ```
 
 ## Signing Playbook
-
+<!--
 ```{autoyaml} sign/site.yml
 ```
+-->
 
 ```{literalinclude} site.yml
 :language: yaml
