@@ -6,15 +6,34 @@ date: 2024-03-08
 title: Ansible CA
 ---
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/edwardtheharris/hacker-rank/shell.yml?branch=main&style=flat-square&logo=gnubash&label=ShellCheck)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/edwardtheharris/ansible-k8s-ca/ansible.yml?branch=main&style=flat-square&logo=ansible&label=Ansible%20Lint)
+![GitHub CodeQL](https://img.shields.io/github/actions/workflow/status/edwardtheharris/ansible-k8s-ca/codeql.yml?branch=main&style=flat-square&logo=githubactions&label=CodeQL)
+[![GitHub Pages Status](https://img.shields.io/github/actions/workflow/status/edwardtheharris/ansible-k8s-ca/pages.yml?branch=main&style=flat-square&logo=githubpages&label=GitHub%20Pages)](https://edwardtheharris.github.io/ansible-k8s-ca/)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/edwardtheharris/ansible-k8s-ca/shell.yml?branch=main&style=flat-square&logo=gnubash&label=ShellCheck)
+
+## Playbooks
 
 ```{toctree}
 :maxdepth: 1
-:caption: Repository Minutiae
+:caption: Playbooks
+
+ca/index
+int/index
+sign/index
+```
+
+```{index} playbooks; ca
+```
+
+## Readme
+
+```{toctree}
+:maxdepth: 1
 
 readme
-license
-cicd
+```
+
+```{index} metadata; repository
 ```
 
 ## References

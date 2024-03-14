@@ -8,19 +8,12 @@
 """
 # pylint: disable=invalid-name,redefined-builtin
 
-# import os
-# import sys
-
-# sys.path.append(os.path.abspath('python/python-basic-cert/reverse_and_swap'))
-# sys.path.append(os.path.abspath('python/python-basic-cert/implement_multiset'))
-# sys.path.append(os.path.abspath('python/simple_array_sum'))
-# sys.path.append(os.path.abspath('python/compare_the_triplets'))
-
 author = 'Xander Harris'
+ansible_roles_path = ['.']
+ansible_tmp_dir = "/tmp/sphinx-ansible"
 autoyaml_root = "."
-autoyaml_doc_delimiter = "###"
-autoyaml_comment = "#"
-autoyaml_level = 10
+autoyaml_depth = 10
+
 copyright = '2024, Xander Harris'
 
 # -- General configuration ---------------------------------------------------
@@ -38,13 +31,19 @@ exclude_patterns = [
 
 extensions = [
     'myst_parser',
+    'notfound.extension',
     'sphinx_design',
     'sphinx_favicon',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.autosummary',
+    'sphinx.ext.duration',
+    'sphinx.ext.extlinks',
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.inheritance_diagram',
     'sphinxcontrib.autoyaml',
+    'sphinxcontrib.sphinx_ansible',
 ]
 
 favicons = [
@@ -69,7 +68,7 @@ favicons = [
 html_static_path = ['_static']
 html_theme = 'sphinx_nefertiti'
 html_theme_options = {
-    'logo': 'img/ansible-180x180.png',
+    'logo': 'img/ansible.png',
     'repository_url': 'https://github.com/edwardtheharris/ansible-k8s-ca',
     'repository_name': 'ansible k8s ca',
     "style": "blue",
