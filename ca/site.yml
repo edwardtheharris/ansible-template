@@ -31,8 +31,6 @@
         - ca
     - name: Create certificate signing request (CSR) for CA certificate
       community.crypto.openssl_csr:
-        authority_cert_issuer: "{{ authority }}"
-        authority_cert_serial_number: "1001"
         basic_constraints:
           - 'CA:TRUE'
         basic_constraints_critical: true
@@ -40,6 +38,8 @@
         email_address: "root@{{ dn.cn }}"
         key_usage:
           - keyCertSign
+          - cRLSign
+          - digitalSignature
         key_usage_critical: true
         locality_name: "{{ dn.locality }}"
         organization_name: "{{ dn.org }}"
