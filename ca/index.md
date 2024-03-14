@@ -24,7 +24,8 @@ ansible-playbook ca/site.yml
 ```
 
 There should be proper comments below this line.
-
+<!--
 ```{ansible-task}
 - include_tasks: ca/site.yml
 ```
+-->
