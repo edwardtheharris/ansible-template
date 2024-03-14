@@ -90,7 +90,7 @@
         - int
         - chain
 - name: Copy Intermediate CA to remotes
-  hosts: ca,dc,np,kcp
+  hosts: bm
   remote_user: duchess
   become: true
   tasks:
@@ -99,7 +99,7 @@
         owner: root
         group: root
         mode: 'u+rw,g+rw'
-        src: "{{ item }}"
+        remote_src: "{{ item }}"
         dest: "{{ item }}"
       loop:
         - /etc/ssl/certs/dc01.int.crt

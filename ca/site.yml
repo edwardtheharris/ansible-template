@@ -62,19 +62,3 @@
       tags:
         - ca
       register: certificate
-- name: Copy root CA to remotes
-  hosts: bm
-  remote_user: duchess
-  become: true
-  tasks:
-    - name: Copy root CA to remotes
-      ansible.builtin.copy:
-        dest: "{{ ca.paths.ca }}"
-        group: root
-        mode: 'u+rw,g+rw'
-        owner: root
-        remote_src: true
-        src: "{{ ca.paths.ca }}"
-      tags:
-        - ca
-      delegate_to: ca
