@@ -109,7 +109,7 @@
         owner: root
         group: network
         mode: 'u+rw,g+rw,o+r'
-        dest: /etc/ssl/certs/chain.crt
+        dest: /etc/ssl/certs/chain.ca.crt
         content: >-
           {{ ''.join(chain_cert.complete_chain) }}
     - name: Write root chain (intermediates and root) to disk
