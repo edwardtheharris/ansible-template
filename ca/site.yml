@@ -11,10 +11,19 @@
       loop: "{{ paths }}"
       tags:
         - clean
+    - name: Add users to network group
+      ansible.builtin.user:
+        name: >-
+          {{ item }}
+        groups: network
+        append: true
+      loop:
+        - root
+        - duchess
     - name: Add directories
       ansible.builtin.file:
         state: directory
-        group: root
+        group: network
         owner: root
         dest: "{{ item }}"
         mode: 'u+rw,g+rw,o+r'

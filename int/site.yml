@@ -27,7 +27,7 @@
         {{ ansible_host }}
       register: csr
     - name: Check whether certificate exists
-      stat:
+      ansible.builtin.stat:
         path: >-
           {{ int_ca.paths.crt }}
       delegate_to: >-
@@ -61,6 +61,9 @@
       register: certificate
     - name: Write certificate file on IA
       ansible.builtin.copy:
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
         dest: >-
           {{ int_ca.paths.crt }}
         content: >-
@@ -69,6 +72,9 @@
         {{ ansible_host }}
     - name: Write certificate file on CA
       ansible.builtin.copy:
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
         dest: >-
           {{ int_ca.paths.crt }}
         content: >-
@@ -100,11 +106,17 @@
       register: chain_cert
     - name: Write complete chain to disk
       ansible.builtin.copy:
-        dest: /etc/ssl/certs/ca.bundle.crt
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
+        dest: /etc/ssl/certs/chain.crt
         content: >-
           {{ ''.join(chain_cert.complete_chain) }}
     - name: Write root chain (intermediates and root) to disk
       ansible.builtin.copy:
-        dest: /etc/ssl/certs/ca.chain.crt
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
+        dest: /etc/ssl/certs/root.ca.crt
         content: >-
           {{ ''.join(chain_cert.chain) }}
