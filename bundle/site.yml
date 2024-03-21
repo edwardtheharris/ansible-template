@@ -42,15 +42,17 @@
         - Copy Bundle
 
     - name: Copy Root CA Private Key to Target Host
-      ansible.builtin.fetch:
+      ansible.builtin.copy:
         src: "/etc/ssl/private/ca.key"
         dest: "/etc/ssl/private/ca.key"
         flat: true
       delegate_to: "{{ dn.cn }}"
+      become: true
+      become_user: root
       when: root_ca_key.stat.exists
 
     - name: Copy Intermediate CA Private Key to Target Host
-      ansible.builtin.fetch:
+      ansible.builtin.copy:
         src: "/etc/ssl/private/int.ca.key"
         dest: "/etc/ssl/private/int.ca.key"
         flat: true
@@ -60,7 +62,7 @@
     # Additional configuration for services to use these certificates and keys can be added here.
   handlers:
     - name: Copy Bundle
-      ansible.builtin.fetch:
+      ansible.builtin.copy:
         src: "/etc/ssl/certs/ca.bundle.crt"
         dest: "/etc/ssl/certs/ca.bundle.crt"
         flat: true
