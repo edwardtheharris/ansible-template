@@ -57,7 +57,7 @@
         ownca_not_after: +36500d  # valid for one year
         ownca_not_before: "-1d"  # valid since yesterday
       delegate_to: >-
-        {{ int_ca.ca_host }}
+        {{ dn.cn }}
       register: certificate
     - name: Write certificate file on IA
       ansible.builtin.copy:
@@ -74,7 +74,7 @@
         content: >-
           {{ certificate.certificate }}
       delegate_to: >-
-        {{ int_ca.ca_host }}
+        {{ dn.cn }}
 - name: Create chain for secondary
   hosts: dc02
   become: true
@@ -85,7 +85,7 @@
           {{ int_ca.paths.crt }}
       when: certificate_exists.stat.exists
       delegate_to: >-
-        {{ int_ca.ca_host }}
+        {{ dn.cn }}
       register: certificate
     - name: Complete the cert chain
       community.crypto.certificate_complete_chain:
@@ -96,7 +96,7 @@
         root_certificates:
           - /etc/ssl/certs/ca.crt
       delegate_to: >-
-        {{ int_ca.ca_host }}
+        {{ dn.cn }}
       register: chain_cert
     - name: Write complete chain to disk
       ansible.builtin.copy:

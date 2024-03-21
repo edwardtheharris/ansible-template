@@ -1,16 +1,8 @@
 ---
 - name: Create root CA
-  hosts: ca
-  remote_user: duchess
+  hosts: all
   become: true
   tasks:
-    - name: Clean
-      ansible.builtin.file:
-        state: absent
-        dest: "{{ item }}"
-      loop: "{{ paths }}"
-      tags:
-        - clean
     - name: Add directories
       ansible.builtin.file:
         state: directory
@@ -20,21 +12,31 @@
         mode: 'u+rw,g+rw,o+r'
       loop: >-
         {{ ssl_dirs }}
-      tags:
-        - ca
     - name: Create private key with password protection
       community.crypto.openssl_privatekey:
         cipher: auto
-        path: "{{ paths.3 }}"
-        passphrase: "{{ passphrase }}"
-      tags:
-        - ca
+        path: '/etc/ssl/private/ca.key'
+        passphrase: >-
+          {{ secret_ca_passphrase }}
+      delegate_to: >-
+        {{ dn.cn }}
+      run_once: true
     - name: Create certificate signing request (CSR) for CA certificate
       community.crypto.openssl_csr:
         basic_constraints:
           - 'CA:TRUE'
         basic_constraints_critical: true
-        common_name: "{{ dn.cn }}"
+        common_name: >-
+          {{ dn.cn }}
+        crl_distribution_points:
+          - full_name:
+              - "URI:https://{{ dn.cn }}/revocations.crl"
+            crl_issuer:
+              - "URI:https://{{ dn.cn }}/"
+            reasons:
+              - key_compromise
+              - ca_compromise
+              - cessation_of_operation
         email_address: "root@{{ dn.cn }}"
         key_usage:
           - keyCertSign
@@ -44,21 +46,30 @@
         locality_name: "{{ dn.locality }}"
         organization_name: "{{ dn.org }}"
         organizational_unit_name: "{{ dn.unit }}"
-        path: "{{ paths.2 }}"
-        privatekey_passphrase: "{{ passphrase }}"
-        privatekey_path: "{{ paths.3 }}"
+        path: '/etc/ssl/csr/ca.csr'
+        privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        privatekey_path: '/etc/ssl/private/ca.key'
         state_or_province_name: "{{ dn.state }}"
-      tags:
-        - ca
+        subject_alt_name: >-
+          {{ subj_alt }}
+      delegate_to: >-
+        {{ dn.cn }}
+      run_once: true
     - name: Create self-signed CA certificate from CSR
       community.crypto.x509_certificate:
-        csr_path: "{{ paths.2 }}"
-        path: "{{ paths.0 }}"
-        privatekey_passphrase: "{{ passphrase }}"
-        privatekey_path: "{{ paths.3 }}"
+        csr_path: '/etc/ssl/csr/ca.csr'
+        path: '/etc/ssl/certs/ca.crt'
+        privatekey_passphrase: "{{ secret_ca_passphrase }}"
+        privatekey_path: '/etc/ssl/private/ca.key'
         provider: selfsigned
         return_content: true
         selfsigned_digest: sha256
-      tags:
-        - ca
+      delegate_to: >-
+        {{ dn.cn }}
       register: certificate
+      run_once: true
+    - name: Distribute Cert
+      ansible.builtin.fetch:
+        src: '/etc/ssl/certs/ca.crt'
+        dest: '/etc/ssl/certs/ca.crt'
+        flat: true
