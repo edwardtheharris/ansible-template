@@ -5,8 +5,7 @@
   tasks:
     - name: Create private key for new certificate on IA
       community.crypto.openssl_privatekey:
-        path: >-
-          {{ int_ca.paths.key }}
+        path: /etc/ssl/private/int.ca.key
       delegate_to: >-
         {{ ansible_host }}
     - name: Create certificate signing request (CSR) for new certificate
@@ -19,10 +18,9 @@
           - keyCertSign
           - cRLSign
           - digitalSignature
-        privatekey_path: >-
-          {{ int_ca.paths.key }}
+        privatekey_path: /etc/ssl/private/int.ca.key
         subject_alt_name: >-
-          {{ int_ca.subj_alt }}
+          {{ subj_alt }}
       delegate_to: >-
         {{ ansible_host }}
       register: csr

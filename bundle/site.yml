@@ -3,38 +3,38 @@
   hosts: all
   become: true
   tasks:
-    - name: Check for Root CA Certificate on ca.socal.rr.com
+    - name: Check for Root CA Certificate on "{{ dn.cn }}"
       ansible.builtin.stat:
         path: "/etc/ssl/certs/ca.crt"
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       register: root_ca_cert
       failed_when: not root_ca_cert.stat.exists
 
-    - name: Check for Intermediate CA Certificate on ca.socal.rr.com
+    - name: Check for Intermediate CA Certificate on "{{ dn.cn }}"
       ansible.builtin.stat:
         path: "/etc/ssl/certs/int.ca.crt"
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       register: intermediate_ca_cert
       failed_when: not intermediate_ca_cert.stat.exists
 
-    - name: Check for Root CA Private Key on ca.socal.rr.com
+    - name: Check for Root CA Private Key on "{{ dn.cn }}"
       ansible.builtin.stat:
         path: "/etc/ssl/private/ca.key"
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       register: root_ca_key
       failed_when: not root_ca_key.stat.exists
 
-    - name: Check for Intermediate CA Private Key on ca.socal.rr.com
+    - name: Check for Intermediate CA Private Key on "{{ dn.cn }}"
       ansible.builtin.stat:
         path: '/etc/ssl/private/int.ca.key'
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       register: intermediate_ca_key
       failed_when: not intermediate_ca_key.stat.exists
 
-    - name: Create Certificate Bundle on ca.socal.rr.com
+    - name: Create Certificate Bundle on "{{ dn.cn }}"
       ansible.builtin.shell:
         cmd: "cat /etc/ssl/certs/ca-cert.pem /etc/ssl/certs/intermediate-cert.pem > /etc/ssl/certs/ca-bundle.pem"
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       when: root_ca_cert.stat.exists and intermediate_ca_cert.stat.exists
       register: bundle_creation
       changed_when: bundle_creation.rc == 0
@@ -46,7 +46,7 @@
         src: "/etc/ssl/private/ca-key.pem"
         dest: "/etc/ssl/private/ca-key.pem"
         flat: true
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       when: root_ca_key.stat.exists
 
     - name: Copy Intermediate CA Private Key to Target Host
@@ -54,7 +54,7 @@
         src: "/etc/ssl/private/intermediate-key.pem"
         dest: "/etc/ssl/private/intermediate-key.pem"
         flat: true
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
       when: intermediate_ca_key.stat.exists
 
     # Additional configuration for services to use these certificates and keys can be added here.
@@ -64,4 +64,4 @@
         src: "/etc/ssl/certs/ca-bundle.pem"
         dest: "/etc/ssl/certs/ca-bundle.pem"
         flat: true
-      delegate_to: "ca.socal.rr.com"
+      delegate_to: "{{ dn.cn }}"
