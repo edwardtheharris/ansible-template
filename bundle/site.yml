@@ -33,7 +33,7 @@
 
     - name: Create Certificate Bundle on "{{ dn.cn }}"
       ansible.builtin.shell:
-        cmd: "cat /etc/ssl/certs/ca-cert.pem /etc/ssl/certs/intermediate-cert.pem > /etc/ssl/certs/ca-bundle.pem"
+        cmd: "cat /etc/ssl/certs/ca.crt /etc/ssl/certs/int.ca.crt > /etc/ssl/certs/ca.bundle.crt"
       delegate_to: "{{ dn.cn }}"
       when: root_ca_cert.stat.exists and intermediate_ca_cert.stat.exists
       register: bundle_creation
@@ -43,16 +43,16 @@
 
     - name: Copy Root CA Private Key to Target Host
       ansible.builtin.fetch:
-        src: "/etc/ssl/private/ca-key.pem"
-        dest: "/etc/ssl/private/ca-key.pem"
+        src: "/etc/ssl/private/ca.key"
+        dest: "/etc/ssl/private/ca.key"
         flat: true
       delegate_to: "{{ dn.cn }}"
       when: root_ca_key.stat.exists
 
     - name: Copy Intermediate CA Private Key to Target Host
       ansible.builtin.fetch:
-        src: "/etc/ssl/private/intermediate-key.pem"
-        dest: "/etc/ssl/private/intermediate-key.pem"
+        src: "/etc/ssl/private/int.ca.key"
+        dest: "/etc/ssl/private/int.ca.key"
         flat: true
       delegate_to: "{{ dn.cn }}"
       when: intermediate_ca_key.stat.exists
@@ -61,7 +61,7 @@
   handlers:
     - name: Copy Bundle
       ansible.builtin.fetch:
-        src: "/etc/ssl/certs/ca-bundle.pem"
-        dest: "/etc/ssl/certs/ca-bundle.pem"
+        src: "/etc/ssl/certs/ca.bundle.crt"
+        dest: "/etc/ssl/certs/ca.bundle.crt"
         flat: true
       delegate_to: "{{ dn.cn }}"

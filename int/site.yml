@@ -26,15 +26,13 @@
       register: csr
     - name: Check whether certificate exists
       stat:
-        path: >-
-          {{ int_ca.paths.crt }}
+        path: /etc/ssl/certs/int.ca.crt
       delegate_to: >-
         {{ ansible_host }}
       register: certificate_exists
     - name: Read existing certificate if exists
       ansible.builtin.slurp:
-        src: >-
-          {{ int_ca.paths.crt }}
+        src: /etc/ssl/certs/int.ca.crt
       when: certificate_exists.stat.exists
       delegate_to: >-
         {{ ansible_host }}
@@ -59,16 +57,14 @@
       register: certificate
     - name: Write certificate file on IA
       ansible.builtin.copy:
-        dest: >-
-          {{ int_ca.paths.crt }}
+        dest: /etc/ssl/certs/int.ca.crt
         content: >-
           {{ certificate.certificate }}
       delegate_to: >-
         {{ ansible_host }}
     - name: Write certificate file on CA
       ansible.builtin.copy:
-        dest: >-
-          {{ int_ca.paths.crt }}
+        dest: /etc/ssl/certs/int.ca.crt
         content: >-
           {{ certificate.certificate }}
       delegate_to: >-
@@ -79,8 +75,7 @@
   tasks:
     - name: Read existing certificate if exists
       ansible.builtin.slurp:
-        src: >-
-          {{ int_ca.paths.crt }}
+        src: /etc/ssl/certs/int.ca.crt
       when: certificate_exists.stat.exists
       delegate_to: >-
         {{ dn.cn }}
