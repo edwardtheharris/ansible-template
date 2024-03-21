@@ -73,3 +73,9 @@
         src: '/etc/ssl/certs/ca.crt'
         dest: '/etc/ssl/certs/ca.crt'
         flat: true
+    - name: Add Root CA to Trust
+      ansible.builtin.command:
+        cmd: update-ca-trust
+    - name: Store Root CA
+      ansible.builtin.command:
+        cmd: trust anchor --store /etc/ssl/certs/ca.crt
