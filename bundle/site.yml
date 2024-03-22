@@ -36,34 +36,57 @@
         cmd: "cat /etc/ssl/certs/ca.crt /etc/ssl/certs/int.ca.crt > /etc/ssl/certs/ca.bundle.crt"
       delegate_to: "{{ dn.cn }}"
       when: root_ca_cert.stat.exists and intermediate_ca_cert.stat.exists
-      register: bundle_creation
-      changed_when: bundle_creation.rc == 0
-      notify:
-        - Copy Bundle
+
+    - name: Slurp bundle
+      ansible.builtin.slurp:
+        src: "/etc/ssl/certs/ca.bundle.crt"
+      delegate_to: "{{ dn.cn }}"
+      when: root_ca_cert.stat.exists and intermediate_ca_cert.stat.exists
+      register: bundle
+
+    - name: Copy Bundle
+      ansible.builtin.copy:
+        content: >-
+          {{ bundle.content | b64decode }}
+        dest: "/etc/ssl/certs/ca.bundle.crt"
+      delegate_to: "{{ dn.cn }}"
+
+    - name: Create Private Dir
+      ansible.builtin.file:
+        state: directory
+        dest: /etc/ssl/private
+        owner: root
+        group: staff
+        mode: 'u+rwx,g-rwx,o-rwx'
+      delegate_to: localhost
+
+    - name: Copy Root CA Private Key
+      ansible.builtin.slurp:
+        src: "/etc/ssl/private/ca.key"
+      delegate_to: >-
+        {{ dn.cn }}
+      when: root_ca_key.stat.exists
+      register: root
+
+    - name: Copy Intermediate CA Private Key
+      ansible.builtin.slurp:
+        src: "/etc/ssl/private/int.ca.key"
+      delegate_to: "{{ dn.cn }}"
+      when: intermediate_ca_key.stat.exists
+      register: int
 
     - name: Copy Root CA Private Key to Target Host
       ansible.builtin.copy:
-        src: "/etc/ssl/private/ca.key"
+        content: >-
+          "{{ root.content | b64decode }}"
         dest: "/etc/ssl/private/ca.key"
-        flat: true
-      delegate_to: "{{ dn.cn }}"
-      become: true
-      become_user: root
       when: root_ca_key.stat.exists
 
     - name: Copy Intermediate CA Private Key to Target Host
       ansible.builtin.copy:
-        src: "/etc/ssl/private/int.ca.key"
+        content: >-
+          {{ int.content | b64decode }}
         dest: "/etc/ssl/private/int.ca.key"
-        flat: true
       delegate_to: "{{ dn.cn }}"
       when: intermediate_ca_key.stat.exists
 
-    # Additional configuration for services to use these certificates and keys can be added here.
-  handlers:
-    - name: Copy Bundle
-      ansible.builtin.copy:
-        src: "/etc/ssl/certs/ca.bundle.crt"
-        dest: "/etc/ssl/certs/ca.bundle.crt"
-        flat: true
-      delegate_to: "{{ dn.cn }}"
