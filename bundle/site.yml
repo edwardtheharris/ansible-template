@@ -32,10 +32,10 @@
       failed_when: not intermediate_ca_key.stat.exists
 
     - name: Create Certificate Bundle on "{{ dn.cn }}"
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: "cat /etc/ssl/certs/ca.crt /etc/ssl/certs/int.ca.crt > /etc/ssl/certs/ca.bundle.crt"
+        creates: '/etc/ssl/certs/ca.bundle.crt'
       delegate_to: "{{ dn.cn }}"
-      when: root_ca_cert.stat.exists and intermediate_ca_cert.stat.exists
 
     - name: Slurp bundle
       ansible.builtin.slurp:
@@ -46,10 +46,12 @@
 
     - name: Copy Bundle
       ansible.builtin.copy:
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
         content: >-
           {{ bundle.content | b64decode }}
         dest: "/etc/ssl/certs/ca.bundle.crt"
-      delegate_to: "{{ dn.cn }}"
 
     - name: Create Private Dir
       ansible.builtin.file:
