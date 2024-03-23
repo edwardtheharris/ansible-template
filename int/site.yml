@@ -25,7 +25,7 @@
         {{ ansible_host }}
       register: csr
     - name: Check whether certificate exists
-      stat:
+      ansible.builtin.stat:
         path: /etc/ssl/certs/int.ca.crt
       delegate_to: >-
         {{ ansible_host }}
@@ -44,10 +44,9 @@
         csr_content: >-
           {{ csr.csr }}
         provider: ownca
-        ownca_path: >-
-          {{ ca.paths.ca }}
-        ownca_privatekey_path: >-
-          {{ ca.paths.key }}
+        privatekey_path: /etc/ssl/private/int.ca.key
+        ownca_path: /etc/ssl/certs/ca.crt
+        ownca_privatekey_path: /etc/ssl/private/ca.key
         ownca_privatekey_passphrase: >-
           {{ secret_ca_passphrase }}
         ownca_not_after: +36500d  # valid for one year
@@ -55,8 +54,11 @@
       delegate_to: >-
         {{ dn.cn }}
       register: certificate
-    - name: Write certificate file on IA
+    - name: Write Intermediate CA to
       ansible.builtin.copy:
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
         dest: /etc/ssl/certs/int.ca.crt
         content: >-
           {{ certificate.certificate }}
@@ -64,6 +66,9 @@
         {{ ansible_host }}
     - name: Write certificate file on CA
       ansible.builtin.copy:
+        owner: root
+        group: network
+        mode: 'u+rw,g+rw,o+r'
         dest: /etc/ssl/certs/int.ca.crt
         content: >-
           {{ certificate.certificate }}
